@@ -1,6 +1,17 @@
-# TODO: Write documentation for `Match::Crystal`
-module Match::Crystal
-	VERSION = "0.1.0"
 
-	# TODO: Put your code here
+macro match(x, hash)
+	{% terminated = false %}
+	case {{x}}
+		{% for key, value in hash %}
+			{% if !terminated %}
+				{% if key.stringify == "_" %}
+					else
+					{% terminated = true %}
+				{% else %}
+					when {{key}}
+				{% end %}
+				{{value}}
+			{% end %}
+		{% end %}
+	end
 end
