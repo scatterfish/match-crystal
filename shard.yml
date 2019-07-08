@@ -1,0 +1,9 @@
+name: match-crystal
+version: 0.1.0
+
+authors:
+  - Amy <fuzzineer@gmail.com>
+
+crystal: 0.29.0
+
+license: MIT
