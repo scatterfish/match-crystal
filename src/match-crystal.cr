@@ -1,13 +1,17 @@
+#
 
 macro match(x, hash)
 	{% terminated = false %}
 	case {{x}}
 		{% for key, value in hash %}
 			{% if !terminated %}
-				{% if key.stringify == "_" %}
-					{%  %}
+				{% if key.is_a?(Underscore) %}
 					else
 					{% terminated = true %}
+				{% elsif key.is_a?(Or) %}
+					{% count = key.stringify.split("||").size %}
+					{% left = key.left %}
+					when {{key.right}}{% for i in (0...count - 2) %},{{left.right}}{% left = left.left %}{% end %},{{left}}
 				{% else %}
 					when {{key}}
 				{% end %}

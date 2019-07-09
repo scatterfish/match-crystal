@@ -70,7 +70,6 @@ it "evaluates right-hand functions" do
 	}).should eq("success")
 end
 
-
 it "supports procs" do
 	test = ""
 	match 2, {
@@ -87,5 +86,40 @@ it "supports procs" do
 		3 => ->{ test = "fail @ 3" },
 	}
 	test.should eq("success")
-	
+end
+
+it "matches runtime integer values" do
+	test_array      = [false] * 4
+	expected_result = [true, true, true, false]
+	(0..2).each do |x|
+		match x, {
+			0 => ->{ test_array[0] = true },
+			1 => ->{ test_array[1] = true },
+			2 => ->{ test_array[2] = true },
+			3 => ->{ test_array[3] = true },
+		}
+	end
+	test_array.should eq(expected_result)
+end
+
+it "supports catch-all match" do
+	match(5, {
+		0 => "fail @ 0",
+		1 => "fail @ 1",
+		_ => "success",
+		5 => "fail @ 5",
+	}).should eq("success")
+end
+
+it "matches multiple cases" do
+	hit_count  = 0
+	miss_count = 0
+	(0...10).each do |x|
+		match x, {
+			2 || 5 || 6 => ->{ hit_count += 1 },
+			_ => ->{ miss_count += 1 },
+		}
+	end
+	hit_count.should eq(3)
+	miss_count.should eq(7)
 end
