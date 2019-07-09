@@ -1,5 +1,3 @@
-#
-
 macro match(x, hash)
 	{% terminated = false %}
 	case {{x}}
